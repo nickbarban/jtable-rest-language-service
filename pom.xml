@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<!-- <scope>runtime</scope> commented for performing tests-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
