@@ -102,4 +102,12 @@ public class User {
 	public void setUserProfiles(Set<UserProfile> userProfiles) {
 		this.userProfiles = userProfiles;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", login=" + login + ", password=" + password + ", email=" + email
+				+ ", state=" + state + ", language=" + language + ", userProfiles=" + userProfiles + "]";
+	}
+	
+	
 }

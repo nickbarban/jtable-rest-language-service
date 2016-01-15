@@ -5,27 +5,74 @@
 <title>Admin Page</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<link
-	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css"
-	th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}"
-	rel="stylesheet" media="screen" />
+<!-- Include one of jTable styles. -->
+<link href="../../static/jtable/themes/metro/blue/jtable.css"
+	th:href="@{jtable/themes/metro/blue/jtable.css}" rel="stylesheet"
+	type="text/css" />
+<link href="../../static/js/jquery-ui.css" th:href="@{js/jquery-ui.css}"
+	rel="stylesheet" type="text/css" />
 
-<script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
-	th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+<!-- Include jTable script file. -->
+<script src="../../static/js/jquery-1.10.2.js"
+	th:src="@{js/jquery-1.10.2.js}" type="text/javascript"></script>
+<script src="../../static/js/jquery-ui.js" th:src="@{js/jquery-ui.js}"
+	type="text/javascript"></script>
+<script src="../../static/jtable/jquery.jtable.js"
+	th:src="@{jtable/jquery.jtable.js}" type="text/javascript"></script>
 
-<link href="../static/css/guru.css" th:href="@{css/guru.css}"
-	rel="stylesheet" media="screen" />
+
+
 
 </head>
 <body>
 	<div class="container">
 		<div class="jumbotron">
-			<img src="../static/images/admin-account-dnn7-1.png" width="500"
+			<img src="../static/images/admin-account-dnn7-1.png" width="100"
 				th:src="@{images/admin-account-dnn7-1.png}" />
 			<h1>Admin Page</h1>
 
 			<h2>List of users</h2>
+			<div id="UserTableContainer"></div>
+
+
+
 		</div>
 	</div>
+	<script type="text/javascript" th:inline="javascript">
+		$(document).ready(function() {
+			$('#UserTableContainer').jtable({
+				title : 'Table of users',
+				actions : {
+					listAction : 'admin/users',
+					createAction : 'admin/addUser',
+					updateAction : 'admin/updateUser',
+					deleteAction : 'admin/deleteUser'
+				},
+				fields : {
+					id : {
+						key : true,
+						list : false
+					},
+					name : {
+						title : 'Name',
+						width : '30%'
+					},
+					login : {
+						title : 'Login',
+						width : '20%'
+					},
+					email : {
+						title : 'E-mail',
+						width : '30%'
+					},
+					password : {
+						title : 'Password',
+						width : '10%'
+					}
+				}
+			});
+			$('#UserTableContainer').jtable('load');
+		});
+	</script>
 </body>
 </html>
