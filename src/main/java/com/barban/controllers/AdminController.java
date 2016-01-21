@@ -1,6 +1,8 @@
 package com.barban.controllers;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestAttributes;
 
 import com.barban.model.User;
 import com.barban.services.UserService;
@@ -31,7 +34,7 @@ public class AdminController {
 		this.userService = userService;
 	}
 
-	@RequestMapping("")
+	@RequestMapping(value = {"/", ""})
 	String admin() {
 		return "admin";
 	}
@@ -40,13 +43,28 @@ public class AdminController {
 	@ResponseBody
 	JTableJsonResponse getAllUsers() {
 		List<User> users = Lists.newArrayList(userService.listAllUsers());
+
 		JTableJsonResponse response = new JTableJsonResponse();
 		if (users != null && users.size() > 0) {
 			LOG.info(String.format("Get all users (%s)", users.size()));
+			List<JTableUser> jTableUsers = users.stream().map(new Function<User, JTableUser>() {
+
+				@Override
+				public JTableUser apply(User user) {
+					JTableUser jTableUser = new JTableUser();
+					jTableUser.setId(user.getId());
+					jTableUser.setName(user.getName());
+					jTableUser.setLogin(user.getLogin());
+					jTableUser.setEmail(user.getEmail());
+					jTableUser.setPassword(user.getPassword());
+					return jTableUser;
+				}
+			}).collect(Collectors.<JTableUser>toList());
 			response.setResult("OK");
-			response.setRecords(users); // return Json(new { Result = "OK",
-										// Records = bstat },
-										// JsonRequestBehavior.AllowGet);
+			response.setRecords(jTableUsers); // return Json(new { Result =
+												// "OK",
+			// Records = users },
+			// JsonRequestBehavior.AllowGet);
 		} else {
 			LOG.warn("Error getting users");
 			response.setResult("ERROR");
@@ -73,7 +91,7 @@ public class AdminController {
 	@RequestMapping("/updateUser")
 	@ResponseBody
 	JTableJsonResponse updateUser(User user) {
-		LOG.info(String.format("Update user: (%s)", user.toString()));
+		LOG.info(String.format("Update user: (%s)", user));
 		JTableJsonResponse response = new JTableJsonResponse();
 		/*
 		 * if (user != null) {
@@ -90,8 +108,8 @@ public class AdminController {
 
 	@RequestMapping("/deleteUser")
 	@ResponseBody
-	JTableJsonResponse deleteUser(@RequestParam User user) {
-		LOG.info(String.format("Delete user: (%s)", user.toString()));
+	JTableJsonResponse deleteUser(Integer id) {
+		LOG.info(String.format("Delete user: %s", id));
 		JTableJsonResponse response = new JTableJsonResponse();
 		/*
 		 * if (id != null) { LOG.info(String.format("Delete user with id: (%s)",

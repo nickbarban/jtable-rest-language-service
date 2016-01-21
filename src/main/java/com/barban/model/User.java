@@ -13,6 +13,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Nick Barban
  *
@@ -21,10 +23,13 @@ import javax.persistence.ManyToOne;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@JsonProperty("id")
 	private int id;
 
+	//@JsonProperty("name")
 	private String name;
+	//@JsonProperty("login")
 	private String login;
 	private String password;
 	private String email;
