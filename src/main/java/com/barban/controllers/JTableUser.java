@@ -58,3 +58,5 @@ public class JTableUser {
 	
 	
 }
+
+//wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -vi /etc/apt/sources

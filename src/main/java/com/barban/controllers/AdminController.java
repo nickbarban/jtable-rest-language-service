@@ -34,7 +34,7 @@ public class AdminController {
 		this.userService = userService;
 	}
 
-	@RequestMapping(value = {"/", ""})
+	@RequestMapping(value = { "/", "" })
 	String admin() {
 		return "admin";
 	}
@@ -61,10 +61,7 @@ public class AdminController {
 				}
 			}).collect(Collectors.<JTableUser>toList());
 			response.setResult("OK");
-			response.setRecords(jTableUsers); // return Json(new { Result =
-												// "OK",
-			// Records = users },
-			// JsonRequestBehavior.AllowGet);
+			response.setRecords(jTableUsers);
 		} else {
 			LOG.warn("Error getting users");
 			response.setResult("ERROR");
@@ -78,9 +75,15 @@ public class AdminController {
 		JTableJsonResponse response = new JTableJsonResponse();
 		if (user != null) {
 			User savedUser = userService.saveUser(user);
-			LOG.info(String.format("Add user: %s", savedUser));
+			JTableUser jTableUser = new JTableUser();
+			jTableUser.setId(savedUser.getId());
+			jTableUser.setName(savedUser.getName());
+			jTableUser.setLogin(savedUser.getLogin());
+			jTableUser.setEmail(savedUser.getEmail());
+			jTableUser.setPassword(savedUser.getPassword());
+			LOG.info(String.format("Add user: %s", jTableUser));
 			response.setResult("OK");
-			response.setRecord(savedUser);
+			response.setRecord(jTableUser);
 		} else {
 			LOG.warn("User is null");
 			response.setResult("ERROR");
@@ -93,14 +96,17 @@ public class AdminController {
 	JTableJsonResponse updateUser(User user) {
 		LOG.info(String.format("Update user: (%s)", user));
 		JTableJsonResponse response = new JTableJsonResponse();
-		/*
-		 * if (user != null) {
-		 * LOG.info(String.format("Update user with id: (%s)", user.getId()));
-		 * User fetchUser = userService.getUserById(user.getId());
-		 * 
-		 * response.setResult("OK"); response.setRecord(fetchUser); } else {
-		 * LOG.warn("User is null"); response.setResult("ERROR"); }
-		 */
+		if (user != null) {
+			LOG.info(String.format("Update user with id: (%s)", user.getId()));
+			//User fetchUser = userService.getUserById(user.getId());
+			userService.saveUser(user);
+			response.setResult("OK");
+			response.setRecord(user);
+		} else {
+			LOG.warn("User is null");
+			response.setResult("ERROR");
+		}
+
 		response.setResult("OK");
 		response.setRecord(user);
 		return response;
@@ -111,11 +117,16 @@ public class AdminController {
 	JTableJsonResponse deleteUser(Integer id) {
 		LOG.info(String.format("Delete user: %s", id));
 		JTableJsonResponse response = new JTableJsonResponse();
-		/*
-		 * if (id != null) { LOG.info(String.format("Delete user with id: (%s)",
-		 * id)); userService.deleteUser(id); response.setResult("OK"); } else {
-		 * LOG.warn("User is null"); response.setResult("ERROR"); }
-		 */
+
+		if (id != null) {
+			LOG.info(String.format("Delete user with id: (%s)", id));
+			userService.deleteUser(id);
+			response.setResult("OK");
+		} else {
+			LOG.warn("User is null");
+			response.setResult("ERROR");
+		}
+
 		response.setResult("OK");
 		return response;
 	}
